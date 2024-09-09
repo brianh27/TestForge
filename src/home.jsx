@@ -129,7 +129,7 @@ const Home=()=>{
       
           <footer className="bg-gray-800 text-white py-6 text-center">
             <div className="container mx-auto px-6">
-              <p>&copy; 2024 NotARealCompany. All rights not reserved.</p>
+              <p>Thank you to William Feng, Nischant, and Dhruv Saini for helping me out. For any questions DM 'mamap' on Discord </p>
             </div>
           </footer>
         </body>
