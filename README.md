@@ -1,6 +1,8 @@
 # React + Vite
 
-I learned web dev over the summer and created this website powered by AI.
-AI and websites are the two most powerful things. You can reach so many people with this.
-I really want people to discover this.
-Thanks to william feng, nischant, dhruv saini and roblox developer for helping
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

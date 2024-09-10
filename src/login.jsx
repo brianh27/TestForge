@@ -43,7 +43,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
     setDisable(true)
     setError(11);
   }
-
+  useEffect(()=> {check({ res, setRes, mail: newEmail, newUser, newPass, setError, usernam })},[newUser,newEmail,newPass])
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold text-center">Create Account</h1>
@@ -52,15 +52,15 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block font-semibold">Username:</label>
-          <input className="w-full p-2 border rounded" onChange={(e) => check({ res, setRes, mail: newEmail, event: e, newUser, newPass, set: upUse, type: 'u', setError, usernam })} value={newUser} disabled={disable} />
+          <input className="w-full p-2 border rounded" onChange={(e) =>upUse(e.target.value)} value={newUser} disabled={disable} />
         </div>
         <div className="mb-4">
           <label className="block font-semibold">Email:</label>
-          <input className="w-full p-2 border rounded" onChange={(e) => check({ res, setRes, mail: newEmail, event: e, newUser, newPass, set: upMail, type: 'e', setError, usernam })} value={newEmail} disabled={disable}/>
+          <input className="w-full p-2 border rounded" onChange={(e) => upMail(e.target.value)} value={newEmail} disabled={disable}/>
         </div>
         <div className="mb-4">
           <label className="block font-semibold">Password:</label>
-          <input className="w-full p-2 border rounded" onChange={(e) => check({ res, setRes, mail: newEmail, event: e, newUser, newPass, set: upPass, type: 'p', setError, usernam })} value={newPass} type="password" disabled={disable}/>
+          <input className="w-full p-2 border rounded" onChange={(e) => upPass(e.target.value)} value={newPass} type="password" disabled={disable}/>
         </div>
         
         {error === 13 ? (

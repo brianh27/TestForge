@@ -46,7 +46,7 @@ function CountdownTimer({reset,setCond}) {
     );
 }
   
-const Free=({uData,setU})=>{
+const Free=()=>{
     const [points,setPoints]=useState(0)
     const [question,setQuestion]=useState(['1+1',2])
     const [ans,setAns]=useState('')
@@ -54,7 +54,20 @@ const Free=({uData,setU})=>{
     const [timerOver,setCond]=useState(false)
     const [board,setBoard]=useState(null)
     const [showL,setShow]=useState(false)
+    const [uData,setU]=useState({id:0,info:{record:0}})
+    const navigate=useNavigate()
+    useEffect(()=>{
+    const temp=getState()
+    if (temp===false){
+      navigate('/')
+      return
+    }
+    else{
+      setU(temp)
+    }
+    },[])
     console.log(uData)
+    
     function reset(){
         setPoints(0)
         setQuestion(['1+1',2])
@@ -79,6 +92,7 @@ const Free=({uData,setU})=>{
         updateRecord()
     }},[points])
     useEffect(()=>{
+        console.log('update')
         async function leaderboard(){
             const t=await getTests({col:'users'})
             console.log(t)
@@ -86,7 +100,7 @@ const Free=({uData,setU})=>{
     
         }
         leaderboard()
-    },[uData])
+    },[showL])
     setTimeout(() => {
         if (parseInt(ans)===question[1]){
             setPoints(points+1)

@@ -3,36 +3,29 @@ import { useState ,useEffect} from 'react'
 import ask from'./aiget.jsx'
 import userCheck,{insert,getTests} from './backend.jsx'
 import validator from 'validator';
-export default async function check({event,mail,newUser,newPass,set,type,setError,usernam,res,setRes}){
+export default async function check({mail,newUser,newPass,setError,usernam,res,setRes}){
     
 
     const isValidEmail = (email) => validator.isEmail(email);
-    set(event.target.value)
     
-    if (type==='u'){
-      newUser=event.target.value
-      const response=await ask({description:`YOU WILL ONLY RETURN THE LETTER Y OR N. YOU ARE A USERNAME CHECKER. IF the username provided is inappropriate return Y, 
-        if it is appropriate return N. Be very strict, avoid racism, any discrimination, being mean, objectification or anything else politically 
-        incorrect or you shouldn't bring up at the dinner table to your family`,query:event.target.value})
-      console.log(response)
-      if (response==='Y'){
-        setError(5)
-        setRes(response)
-        }else{
-          
-          setError(0)
-        setRes(response)
+    
 
-        }
       
-    
-    }else if (type==='e'){
-        mail=event.target.value
-    }else if (type==='p'){
-      newPass=event.target.value
+    const response=await ask({description:`YOU WILL ONLY RETURN THE LETTER Y OR N. YOU ARE A USERNAME CHECKER. IF the username provided is inappropriate return Y, 
+        if it is appropriate return N. Be very strict, avoid racism, any discrimination, being mean, objectification or anything else politically 
+        incorrect or you shouldn't bring up at the dinner table to your family`,query:newUser})
+    console.log(response)
+    if (response==='Y'){
+      setError(5)
+      setRes(response)
+    }else{
+          
+      setError(0)
+      setRes(response)
+
     }
-    console.log(mail)
-    console.log(usernam)
+      
+
     
     if (usernam===null){
       setError(0)
@@ -62,8 +55,8 @@ export default async function check({event,mail,newUser,newPass,set,type,setErro
         setError(6)
     }else if (  newPass.match(/[^\w\s]/g)&&symbols.length<3){
         setError(7)
-    }else if (newPass.toLowerCase().includes('cow')===false){
-        setError(8)
+    //}else if (newPass.toLowerCase().includes('cow')===false){
+      //  setError(8)
     }else{
         setError(13)
     }
