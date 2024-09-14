@@ -9,6 +9,7 @@ import Profile from "./profile.jsx"
 
 import Rush from './rush.jsx'
 import Home from './home.jsx'
+import Amc from './amc.jsx'
 function App() {
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/profile" element={<Profile/>} />
           
           <Route path="/rush/:mode" element={<Rush/>} />
+          <Route path="/amc" element={<Amc/>} />
           <Route path="/" element={<Home/>} />
         </Routes>
       </div>
