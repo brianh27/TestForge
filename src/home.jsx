@@ -77,6 +77,13 @@ const Home=()=>{
                 <p className="text-lg font-semibold text-gray-800">Rush</p>
                 <p className="text-sm text-gray-600">Test your speed and agility with our Rush mode challenges.</p>
               </div>
+              <div 
+                className="cursor-pointer p-4 bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 transition ease-in-out duration-300"
+                onClick={() => navigate('/tools')}
+              >
+                <p className="text-lg font-semibold text-gray-800">Tools</p>
+                <p className="text-sm text-gray-600">Significant Figures Calculator</p>
+              </div>
             </div>
 
           </section>
