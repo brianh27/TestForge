@@ -24,7 +24,20 @@ export default async function userCheck(props){
         console.log("Error: ",err.message)
     })
 }
-
+export async function imagine({prompt}){
+    try {
+        console.log('ye');
+        const response = await axios.get(`https://www.googleapis.com/customsearch/v1?key=AIzaSyBqvs80rmSAz5VCUYoW-AMUV347QnFfqCE&cx=f59ad213ea49b4e52&q=${prompt}&searchType=image`)
+        console.log('done');
+        
+        
+        
+        return response.data.items[5].image.thumbnailLink
+    } catch (error) {
+        return null
+        console.error(error);
+    }
+}
 export async function getTests(props){
     
     const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
@@ -57,6 +70,7 @@ export async function update(props) {
         try{
         return await pb.collection('Test').update(props.id, {
             Practice_Tests: props.cards,
+            images:props.images,
             editors: rec.editors===null?[props.edi]:rec.editors.concat([props.edi])
         })
         .then(record => {

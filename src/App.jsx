@@ -11,6 +11,7 @@ import Rush from './rush.jsx'
 import Home from './home.jsx'
 import Amc from './amc.jsx'
 import Tools from './tools.jsx'
+import Image from './image.jsx'
 function App() {
   return (
     <Router>
@@ -27,6 +28,7 @@ function App() {
           <Route path="/rush/:mode" element={<Rush/>} />
           <Route path="/amc" element={<Amc/>} />
           <Route path="/tools" element={<Tools/>} />
+          <Route path="/image" element={<Image/>} />
           <Route path="/" element={<Home/>} />
         </Routes>
       </div>

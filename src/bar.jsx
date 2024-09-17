@@ -10,7 +10,7 @@ const Bar=({user})=>{
         console.log(isDropdownOpen)
     };
     const navigate = useNavigate();
-    console.log(user)
+    
     return(
         <nav className="bg-gray-800 text-white py-4 relative">
             <div className="container mx-auto px-6 flex justify-between items-center">

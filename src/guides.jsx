@@ -3,11 +3,12 @@ import { useState,useEffect } from 'react'
 import Login from './login.jsx'
 import { Link } from 'react-router-dom';
 import ask from "./aiget.jsx"
-import userCheck,{insert,getState,getData,getTests,update} from './backend.jsx'
+import userCheck,{insert,getState,imagine,getData,getTests,update} from './backend.jsx'
 import { set } from 'mongoose';
 import { useSearchParams,useNavigate } from 'react-router-dom';
 import NotFound from './home.jsx'
 import Bar from './bar.jsx'
+
 async function getResult({i,ans,storedAns,setMem,num}){
                
                 
@@ -33,14 +34,20 @@ async function getResult({i,ans,storedAns,setMem,num}){
     setMem(t);
     
 }
-const Write=({setFormat, format, edits, setEdits, setaccept, accept, update, user, idNum,setID})=>{
+const Write=({setFormat, format, edits, setEdits, setaccept, accept, update, user, idNum,setID,images})=>{
     
     const topics=['Math',"Science",'Social Studies',"Literature",'Other']
     const toAccept=['Please make sure you have a title','Please make sure you have the topic Math, Science, Social Studies, Literature, or Other','Please make sure your vocab each have definitions below them','Please make sure your quiz questions each have anwsers below them',"Please make sure you have an essay prompt"]
     function updateServer({i}){
             
         
-        setFormat(format({t:i[4],v:i[0],q:i[1],e:i[2],s:i[3]}))
+        const temp=format({t:i[4],v:i[0],q:i[1],e:i[2],s:i[3]})[0]
+       
+        
+        setFormat(temp)
+       
+
+        
         
     }
     function processChange({ e, i }) {
@@ -67,7 +74,9 @@ const Write=({setFormat, format, edits, setEdits, setaccept, accept, update, use
         }
     }
     async function handle(){
-        const temp=await update({edi:user,id:idNum,col:'Test',cards:format({t:edits[4],v:edits[0],q:edits[1],e:edits[2],s:edits[3]})})
+        const t=await format({t:edits[4],v:edits[0],q:edits[1],e:edits[2],s:edits[3]})
+        console.log(t)
+        const temp=await update({edi:user,id:idNum,col:'Test',images:images,cards:t[0]})
         console.log(temp)
         if (temp!=true){
         setID(temp)
@@ -79,6 +88,7 @@ const Write=({setFormat, format, edits, setEdits, setaccept, accept, update, use
             <form onSubmit={(event) => {
                     event.preventDefault();
                     updateServer({ i: edits});
+                    
                 }}>
                     <p><input placeholder="Enter your title" value={edits[4]} onChange={(e)=>processChange({e:e,i:4})}></input></p>
                     <p><input placeholder="Enter your topic" value={edits[3]} onChange={(e)=>processChange({e:e,i:3})}></input></p>
@@ -167,7 +177,7 @@ const Guides=()=>{
     const [accept,setaccept]=useState(3)
     const [test,setTest]=useState(null)
     const [edits,setEdits]=useState(['','','','',''])
-
+    const [images,setImages]=useState(Array(100).fill(null))
     
     const [flip,setFlip]=useState(0)
     
@@ -176,6 +186,8 @@ const Guides=()=>{
     
 
     function setA({t}){
+        console.log(t.length)
+        console.log('compiled')
         if (t!=null){
             const ans=[];
             for (let a=0;a<t.length;a+=1){
@@ -186,30 +198,46 @@ const Guides=()=>{
     }
     
   
-    function format({t,v,q,e,s}){
+    async function format({t,v,q,e,s,first}){
         
         setNum(0)
         const info=[]
         const vocab=v.split('\n')
+        const temp=[]
         
         for (let i=0;i<vocab.length/2;i+=1){
             info.push([0,vocab[i*2],vocab[i*2+1]])
+            if (first){
+                const response=await imagine({prompt:vocab[i*2]})
+                temp.push(response)
+            }
+            
         }
         const quiz=q.split('\n')
         
         for (let i=0;i<quiz.length/2;i+=1){
             info.push([1,quiz[i*2],quiz[i*2+1]])
+            if (first){
+                const response=await imagine({prompt:quiz[i*2]})
+                temp.push(response)
+            }
         }
         const essay=e.split('\n')
         
         for (let i=0;i<essay.length;i+=1){
             info.push([2,essay[i]])
+            if (first){
+                const response=await imagine({prompt:essay[i]})
+                temp.push(response)
+            }
         }
         info.push(t)
         info.push(s)
-        return info
+
+        return [info,temp]
         
     }
+    console.log(formatted)
     async function generateCards(event){
         
         setNotify(1)
@@ -239,9 +267,13 @@ const Guides=()=>{
 
             setEdits([vocabs,quizs,essay,subject,title])
             
-            const tempo=format({t:title,v:vocabs,q:quizs,e:essay,s:subject})
-            setFormat(tempo)
-            setA({t:tempo})
+            
+            const temp=await format({t:title,v:vocabs,q:quizs,e:essay,s:subject,first:true})
+            console.log(temp)
+            setFormat(temp[0])
+            setImages(temp[1])
+            
+            setA({t:temp[0]})
             setID(Math.random())
 
             setNotify(3)
@@ -254,7 +286,7 @@ const Guides=()=>{
         
         
     }
-    
+    console.log(images)
     const Generate=()=>{
         const Slider=({text,code})=>{
             
@@ -291,7 +323,7 @@ const Guides=()=>{
         }
         async function addToServer(){
             console.log(user)
-            const id=await insert({data:{Practice_Tests:formatted,username:user.username,editors:null},col:"Test"})
+            const id=await insert({data:{Practice_Tests:formatted,images:images,username:user.username,editors:null},col:"Test"})
             setID(id)
  
         }
@@ -301,7 +333,7 @@ const Guides=()=>{
             
 
             {notifications[notify]}
-            {notify===3 ?<button onClick={()=> {addToServer(); setNotify(4)}}>Save to Server</button>:''}
+            {notify===3 ?<button className="bg-gray-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150" onClick={()=> {addToServer(); setNotify(4)}}>Save to Server</button>:''}
             <p></p>
             <Slider text={'Vocabulary'} code={0}></Slider>
             <Slider text={'Short Response'} code={1}></Slider>
@@ -351,9 +383,11 @@ const Guides=()=>{
                         onChange={(e) => setInputValue(e.target.value)}
                     />
                     {test.filter(t=>t.Practice_Tests[t.Practice_Tests.length-2].toLowerCase().includes(inputValue.toLowerCase())&& t.Practice_Tests[t.Practice_Tests.length-1].includes(topics[topic])).map((n,i)=><li key={i}>
-                    <button onClick={()=>{setFormat(n.Practice_Tests);setA({t:n.Practice_Tests});setID(n.id);
+                    <button onClick={()=>{setFormat(n.Practice_Tests);setImages(n.images);setA({t:n.Practice_Tests});setID(n.id);
                     
-                        setEdits([n.Practice_Tests.map((t,i)=>t[0]===0?'\n'+t[1]+'\n'+t[2]:'').join('').slice(1,10000),n.Practice_Tests.map(t=>t[0]===1?'\n'+t[1]+'\n'+t[2]:'').join('').slice(1,10000),n.Practice_Tests.map(t=>t[0]===2?'\n'+t[1]:'').join('').slice(1,10000),n.Practice_Tests[n.Practice_Tests.length-1],n.Practice_Tests[n.Practice_Tests.length-2]])}}>
+                        setEdits([n.Practice_Tests.map((t,i)=>t[0]===0?'\n'+t[1]+'\n'+t[2]:'').join('').slice(1,10000),n.Practice_Tests.map(t=>t[0]===1?'\n'+t[1]+'\n'+t[2]:'').join('').slice(1,10000),n.Practice_Tests.map(t=>t[0]===2?'\n'+t[1]:'').join('').slice(1,10000),n.Practice_Tests[n.Practice_Tests.length-1],n.Practice_Tests[n.Practice_Tests.length-2]])
+                        
+                        }}>
                         {n.Practice_Tests[n.Practice_Tests.length-2].slice(0,100)}...</button> Created by: {n.username} {n.editors!=null&&'Edited by:.'+[... new Set(n.editors)]} </li>) }
                     <p></p>
                 </div>
@@ -375,6 +409,7 @@ const Guides=()=>{
                   className="text-xl font-bold text-black-800 bg-gray-300 hover:bg-gray-400 text-black h-64 w-80 px-4 py-2 rounded-lg transition duration-300 ease-in-out overflow-hidden flex items-center justify-center"
                 >
                   <span className="text-center break-words">{card[flip + 1]}</span>
+                  {images[num]!=null&&<img  className="max-w-[150px] max-h-[150px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                 </button>
               </div>
               
@@ -391,9 +426,11 @@ const Guides=()=>{
                 
             }
             useEffect(()=>{const temp=0},[storedAns])
+            console.log(storedAns)
             return(
                 <div>
                     {card[1]}
+                    {images[num]!=null&&<img  className="max-w-[150px] max-h-[150px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                     <form onSubmit={handleSubmit}>
                         <input type="text" placeholder="Type your Answer Here" name='inputField'/>
                         <button className='bg-blue-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150' type="submit">Submit</button>
@@ -424,6 +461,7 @@ const Guides=()=>{
             return(
                 <div>
                     {card[1]}
+                    {images[num]!=null&&<img  className="max-w-[150px] max-h-[150px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                     <form onSubmit={(event) => {
                         
                         event.preventDefault();
@@ -456,13 +494,14 @@ const Guides=()=>{
                 </div>
             )
         }
-        
+        console.log(num)
         return (
             <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-5">{formatted[formatted.length-2]}</h1>
                 {<div><button onClick={()=>{setNum((num-1+(formatted.length-2)*10)%(formatted.length-2)); setFlip(0);}} className="bg-gray-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150">Previous</button><button onClick={()=>{setNum((num+1+(formatted.length-2)*10)%(formatted.length-2)); setFlip(0);}}className="bg-gray-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150">Next</button></div>}
                 <b>{num+1} out of {formatted.length-2}</b>
                 {formatted[num][0]===0?<Vocab card={formatted[num]}></Vocab>:(formatted[num][0]===1?<Quiz card={formatted[num]}></Quiz>:<Essay card={formatted[num]}></Essay>)}
+                
             </div>
         )
     }
@@ -474,7 +513,7 @@ const Guides=()=>{
         )
     }
    
-    const pages=[<Generate></Generate>,<Search setCards={setCards}></Search>,<Write  setID={setID} setFormat={setFormat}     format={format} edits={edits} setEdits={setEdits} setaccept={setaccept} accept={accept} update={update} user={user===null?'':user.username} 
+    const pages=[<Generate></Generate>,<Search setCards={setCards}></Search>,<Write  images={images} setID={setID} setFormat={setFormat}     format={format} edits={edits} setEdits={setEdits} setaccept={setaccept} accept={accept} update={update} user={user===null?'':user.username} 
         idNum={idNum}
     ></Write>,<p></p>,<Starred></Starred>]
 
