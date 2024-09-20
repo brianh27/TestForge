@@ -208,8 +208,8 @@ const Guides=()=>{
         for (let i=0;i<vocab.length/2;i+=1){
             info.push([0,vocab[i*2],vocab[i*2+1]])
             if (first){
-                const response=await imagine({prompt:vocab[i*2]})
-                temp.push(response)
+                
+                temp.push(null)
             }
             
         }
@@ -430,7 +430,7 @@ const Guides=()=>{
             return(
                 <div>
                     {card[1]}
-                    {images[num]!=null&&<img  className="max-w-[150px] max-h-[150px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
+                    {images[num]!=null&&<img  className="max-w-[200px] max-h-[200px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                     <form onSubmit={handleSubmit}>
                         <input type="text" placeholder="Type your Answer Here" name='inputField'/>
                         <button className='bg-blue-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150' type="submit">Submit</button>
@@ -461,7 +461,7 @@ const Guides=()=>{
             return(
                 <div>
                     {card[1]}
-                    {images[num]!=null&&<img  className="max-w-[150px] max-h-[150px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
+                    {images[num]!=null&&<img  className="max-w-[200px] max-h-[200px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                     <form onSubmit={(event) => {
                         
                         event.preventDefault();

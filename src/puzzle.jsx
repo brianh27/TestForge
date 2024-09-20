@@ -10,7 +10,7 @@ const Display=({userData,d,yesterday})=>{
    
     const [choice,setChoice]=useState(d in userData.info.answers?userData.info.answers[d]:null)
     async function changeAcc({res}){
-        console.log('called')
+        
         const temp=userData
         temp.info.answers[d]=res
         
@@ -31,7 +31,7 @@ const Display=({userData,d,yesterday})=>{
         
         
     }
-    console.log(choice===null)
+    
     const Question=()=>{
         
         
@@ -100,7 +100,7 @@ async function getPuzzle(){
         const temp=d.split()[0];
         temp[1]+=1
         const t=temp.join('-')
-        console.log(t)
+        
         return t
     }
     return(
@@ -125,12 +125,12 @@ const Puzzle=()=>{
     
     async function getAns({userID}){
         const temp=await getData({col:'users',id:userID})
-       
+        
         if (!(yesterday in temp.info.answers) && temp.info.streak>1) {
             temp.info.streak=0
             await updateUser({col:'users',id:temp.id,info:temp})
         }
-        
+        console.log('got')
         setUser(temp)
 
     }
@@ -145,13 +145,45 @@ const Puzzle=()=>{
             }
         }
     }, [userData, navigate]);
-    
+    console.log(userData)
     return(
         <div  className='bg-yellow-100'>
             <Bar user={userData}></Bar>
             <h1 className="text-5xl font-extrabold text-red-600  mb-6 leading-tight font-poppins">Daily Puzzle</h1>
             
             {userData===null?'loading...':<Display d={d} yesterday={yesterday} userData={userData}></Display>}
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>     <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
             
         </div>
     )

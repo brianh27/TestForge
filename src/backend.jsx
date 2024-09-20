@@ -32,10 +32,11 @@ export async function imagine({prompt}){
         
         
         
-        return response.data.items[5].image.thumbnailLink
+        return response.data.items[0].image.thumbnailLink
     } catch (error) {
-        return null
         console.error(error);
+        return null
+        
     }
 }
 export async function getTests(props){
