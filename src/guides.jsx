@@ -343,7 +343,7 @@ const Guides=()=>{
                 
                 <textarea classname='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' id="response" name="response" rows="10" cols="50" placeholder="Paste your subject or your notes in the box below to generate a practice test"></textarea>
                 
-                <p><button type="submit" className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-600'>Submit</button></p>
+                <p><button disabled={notify===1} type="submit" className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-600'>Submit</button></p>
                 
             </form>
             </div>
@@ -433,7 +433,7 @@ const Guides=()=>{
                     {images[num]!=null&&<img  className="max-w-[200px] max-h-[200px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                     <form onSubmit={handleSubmit}>
                         <input type="text" placeholder="Type your Answer Here" name='inputField'/>
-                        <button className='bg-blue-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150' type="submit">Submit</button>
+                        <button className='bg-blue-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150' disabled={storedAns[num][1]==="Loading, please wait..."}type="submit">Submit</button>
                     </form>
                     {storedAns[num][1]}
                 </div>
@@ -458,6 +458,7 @@ const Guides=()=>{
                 
             }
             useEffect(()=>setResponse(response),[storedAns])
+            
             return(
                 <div>
                     {card[1]}
@@ -477,7 +478,7 @@ const Guides=()=>{
                             onChange={(e) => {setResponse(e.target.value);const temp=storedAns; temp[num][0]=e.target.value;setMem(temp)}} 
                         ></textarea>
 
-                        <p><button className='bg-blue-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150' type="submit">Submit</button></p>
+                        <p><button className='bg-blue-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150' type="submit" disabled={storedAns[num][1]==="Loading. Please Wait..."}>Submit</button></p>
                     </form>
                     {storedAns[num][1]}
                 </div>

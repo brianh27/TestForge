@@ -51,7 +51,7 @@ export default async function check({mail,newUser,newPass,setError,usernam,res,s
     
     else if (res==='Y'){
         setError(5)
-    }else if (newPass.length>15 ||newPass.length<5){
+    }else if (newPass.length>25 ||newPass.length<5){
         setError(6)
     }else if (  newPass.match(/[^\w\s]/g)&&symbols.length<3){
         setError(7)

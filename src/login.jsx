@@ -7,7 +7,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
   
   const errors = [
     'Please type a username', 'Your username is not available', 'Your username must only have letters', "You're email is not available", 
-    'Please make sure to have \na proper email', 'Your username must be appropriate', 'Your password must be \n between 5-15 characters', 
+    'Please make sure to have \na proper email', 'Your username must be appropriate', 'Your password must be \n between 5-25 characters', 
     'Your password must contain a 3 symbols', 'Your password must \n contain the word cow', 'Your password must be appropriate', 
     'Loading...', 'Account created! Please go to \nthe login page and sign in', 'Error in creating account. \n Please check info then retry...'
   ];

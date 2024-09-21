@@ -11,7 +11,7 @@ const Home=()=>{
     
     const [message,setMessage]=useState(null)
     const urlParams = new URLSearchParams(window.location.search);
-    
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         if (user === null) {
@@ -21,8 +21,11 @@ const Home=()=>{
                 console.log(myParam)
                 if (myParam!=null){
                   
-                  setMessage('Please Sign In Before Using Services')
+                  setMessage('Please Sign In \n Before Using Services')
+                  setVisible(true);
+                  setTimeout(() => setVisible(false), 2000); 
                   setTimeout(()=>setMessage(null),3000)
+                  
                   
                 }
             } else {
@@ -35,7 +38,16 @@ const Home=()=>{
         <body class="bg-gray-100 font-sans">
 
           {/* Top Navigation Bar */}
-          {message!=null&&<div className='	object-position: center top;'>{message}</div>}
+          {message != null && 
+ <div className={`text-black-500 bg-red-400 text-xl border-solid border-2 border-red-700 rounded-md p-5 mb-2 fixed top-0 left-1/2 transform -translate-x-1/2 z-10 font-bold transition-all duration-500 ease-in-out ${visible ? 'opacity-100' : 'opacity-0'}`}>
+ {message}
+</div>
+
+}
+
+
+
+
           <Bar user={user}></Bar>
 
 
