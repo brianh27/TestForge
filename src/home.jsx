@@ -12,7 +12,7 @@ const Home=()=>{
     const [message,setMessage]=useState(null)
     const urlParams = new URLSearchParams(window.location.search);
     const [visible, setVisible] = useState(false);
-
+    const [userCount,setUserCount]=useState(32)
     useEffect(() => {
         if (user === null) {
             const temp = getState();
@@ -34,8 +34,33 @@ const Home=()=>{
         }
     }, [user, navigate]);
     
+    useEffect(()=>{async function getCount() {
+      const t=await getTests({col:'users'})
+      console.log(t)
+      setUserCount(t.length)
+    }
+    getCount()
+    },[])
+    
+    const displayElement = document.getElementById("userCountDisplay");
+    let count = 0;
+
+    window.addEventListener("scroll", () => {
+      const sectionPosition = 1500
+      if (window.scrollY >= sectionPosition) {
+        const interval = setInterval(() => {
+          if (count < userCount) {
+            count++;
+            displayElement.textContent = count;
+          } else {
+            clearInterval(interval);
+          }
+        }, 65); // Adjust speed here
+      }
+    });
+
     return (
-        <body class="bg-gray-100 font-sans">
+        <body class="bg-black font-sans">
 
           {/* Top Navigation Bar */}
           {message != null && 
@@ -53,20 +78,36 @@ const Home=()=>{
 
 
           {/* Existing Sections */}
-          <section className="relative bg-blue-500 text-white">
-            <div className="container mx-auto px-6 py-16 text-center">
-              <h1 className="text-4xl font-bold mb-4">Welcome to TestForge</h1>
-              <p className="text-xl mb-8">
-                Your one-stop solution for all your educational needs. We provide
-                top-notch practice tests and puzzles to help you achieve your goals.
-              </p>
-              {user===null&&
-              <a href="/login" className="bg-yellow-500 text-gray-800 py-2 px-6 rounded hover:bg-yellow-400">
-                Get Started
-              </a>}
-            </div>
-          </section>
-          <section className="relative bg-gray-200 text-lg py-20 px-8 text-black">
+         
+          <section className="relative h-screen flex items-center justify-center text-center bg-black text-white" style={{ fontFamily: "'Inter', sans-serif'" }}>
+  <div className="w-full px-6 flex flex-col items-center justify-center h-full pt-0">
+
+    <h1 className="text-5xl md:text-8xl font-extrabold mb-10 bg-clip-text text-transparent bg-gradient-to-r from-pink-100 to-purple-100">
+      TESTFORGE
+    </h1>
+
+    <p className="text-lg md:text-3xl mb-12 max-w-[700px] mx-auto leading-snug whitespace-normal">
+      Free AI Practice Test Maker with <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+        flashcards and quizzes 
+      </span> 
+      &nbsp;that will help you ace your tests.
+    </p>
+
+    
+    <a href={user === null ? "/login" : "/guides"} 
+       className="bg-white text-black font-bold text-xl py-4 px-10 rounded-lg hover:bg-gray-200 transition-all duration-300 transform hover:scale-105"
+       style={{ boxShadow: "0 0 30px rgba(128, 0, 255, 0.8)" }}>
+      Get Started
+    </a>
+  </div>
+</section>
+
+
+
+
+
+
+          <section className="relative bg-gray-300 text-lg py-20 px-8 text-black">
           <div className="flex flex-col items-center text-lg space-y-4">
               <div 
                 className="cursor-pointer p-4 bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 transition ease-in-out duration-300"
@@ -133,18 +174,20 @@ const Home=()=>{
               </div>
             </div>
           </section>
-      
-          <section id="cta" className="bg-purple-300 text-white py-16 text-center">
-            <div className="container mx-auto px-6">
-              <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-              <p className="text-xl mb-8">
-                Join us today and experience the best service tailored just for you.
-              </p>
-              {user===null&&<a href="/login" className="bg-yellow-500 text-gray-800 py-2 px-6 rounded hover:bg-yellow-400">
+          <section className="relative flex items-center justify-center text-center bg-black text-white p-20" style={{ fontFamily: "'Inter', sans-serif'" }}>
+  <div className="w-full px-6 flex flex-col items-center justify-center h-full pt-0">
+    <h1 className="text-blue-500 text-9xl font-bold mb-2 glow">
+      <span id="userCountDisplay">0</span>
+    </h1>
+    <h2 className="text-3xl md:text-5xl font-extrabold mb-10 bg-clip-text text-transparent bg-gradient-to-r from-pink-100 to-purple-100">
+      Users and counting
+    </h2>
+    {user===null&&<a href="/login" className="bg-yellow-500 text-gray-800 py-2 px-6 rounded hover:bg-yellow-400">
                 Sign In Now
               </a>}
-            </div>
-          </section>
+  </div>
+</section>
+
       
           <footer className="bg-gray-800 text-white py-6 text-center">
             <div className="container mx-auto px-6">

@@ -24,7 +24,7 @@ const Bar=({user})=>{
                 <a href='https://discord.gg/UQbMpFyrPh' target="_blank" className="text-gray-300 hover:text-white mx-4 cursor-pointer">Join the Discord</a>
                 <a 
                   onClick={() => user === null ? navigate('/login') : toggleDropdown()} 
-                  className="text-gray-300 hover:text-white mx-4 cursor-pointer"
+                  className="text-gray-300 hover:text-white mx-4 cursor-pointer font-bold"
                 >
                   
                   {user === null ? "Sign in" : user.username}

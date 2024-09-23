@@ -94,8 +94,8 @@ const Free=()=>{
     useEffect(()=>{
         console.log('update')
         async function leaderboard(){
-            const t=await getTests({col:'users'})
-            console.log(t)
+            let t=await getTests({col:'users'})
+            t=t.filter(n=>n.info.record>0)
             setBoard(t.sort((a,b)=>b.info.record-a.info.record))
     
         }
@@ -168,7 +168,7 @@ const Free=()=>{
           ) : (
             <ol className="list-decimal pl-5 text-lg text-gray-800">
               {board.map((n, i) => (
-                <li key={i} className="mb-2">{n.username}'s Score is {n.info.record}</li>
+                <li key={i} className="mb-2">{n.username}: {n.info.record}</li>
               ))}
             </ol>
           )}
