@@ -46,7 +46,7 @@ const Home=()=>{
     let count = 0;
 
     window.addEventListener("scroll", () => {
-      const sectionPosition = 1500
+      const sectionPosition = 1000
       if (window.scrollY >= sectionPosition) {
         const interval = setInterval(() => {
           if (count < userCount) {
