@@ -99,7 +99,7 @@ const Home=()=>{
        style={{ boxShadow: "0 0 30px rgba(128, 0, 255, 0.8)" }}>
       Get Started
     </a>
-      <p>Design inspired by Usaco Guide</p>
+      <p className="mt-4">Design inspired by Usaco Guide</p>
   </div>
 </section>
 
