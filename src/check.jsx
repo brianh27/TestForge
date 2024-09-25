@@ -20,7 +20,7 @@ export default async function check({mail,newUser,newPass,setError,usernam,res,s
       setRes(response)
     }else{
           
-      setError(0)
+      
       setRes(response)
 
     }
