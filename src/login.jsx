@@ -11,7 +11,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
     'Your password must contain a 3 symbols', 'Your password must \n contain the word cow', 'Your password must be appropriate', 
     'Loading...', 'Account created! Please go to \nthe login page and sign in', 'Error in creating account. \n Please check info then retry...'
   ];
-  
+  const navigate = useNavigate();
   
   const [res, setRes] = useState('N');
   const [disable,setDisable]=useState(false)
@@ -43,6 +43,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
     setDisable(true)
     setError(11);
   }
+  const [isChecked, setIsChecked] = useState(false);
   useEffect(()=> {check({ res, setRes, mail: newEmail, newUser, newPass, setError, usernam })},[newUser,newEmail,newPass])
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
@@ -62,13 +63,28 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
           <label className="block font-semibold">Password:</label>
           <input className="w-full p-2 border rounded" onChange={(e) => upPass(e.target.value)} value={newPass} type="password" disabled={disable}/>
         </div>
-        
+        <div className="flex items-center mb-4">
+          <input type="checkbox" id="checkbox1" name="agreement" className="mr-2"   checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)}/>
+          <label htmlFor="checkbox1">I agree to the <a href="https://testforger.vercel.app/tos" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">terms and conditions</a></label>
+        </div>
         {error === 13 ? (
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Register</button>
+          isChecked ? (
+            <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+              Register
+            </button>
+          ) : (
+            <p className="text-red-500 text-center">
+              {"Please Agree to the \n terms and conditions".split('\n').map((line, index) => (
+                <span key={index}>{line}<br /></span>
+              ))}
+            </p>
+          )
         ) : (
-          <p className="text-red-500 text-center">{errors[error].split('\n').map((line, index) => (
-            <p key={index}>{line}</p>
-          ))}</p>
+          <p className="text-red-500 text-center">
+            {errors[error].split('\n').map((line, index) => (
+              <span key={index}>{line}<br /></span>
+            ))}
+          </p>
         )}
       </form>
       
@@ -83,7 +99,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
 const Login = () => {
   const [error, setError] = useState(0);
   const navigate = useNavigate();
-
+  console.log(error)
   const Created = () => {
     const [user, changeUser] = useState('');
     const [pass, changePass] = useState('');

@@ -12,6 +12,7 @@ import Home from './home.jsx'
 import Amc from './amc.jsx'
 import Tools from './tools.jsx'
 import Image from './image.jsx'
+import TOS from './tos.jsx'
 function App() {
   return (
     <Router>
@@ -30,6 +31,8 @@ function App() {
           <Route path="/tools" element={<Tools/>} />
           <Route path="/image" element={<Image/>} />
           <Route path="/" element={<Home/>} />
+          <Route path="/tos" element={<TOS/>} />
+          
         </Routes>
       </div>
     </Router>
