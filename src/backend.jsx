@@ -45,7 +45,7 @@ export async function getTests(props){
     return await pb.collection(props.col).getFullList({
         sort: '-created',
     }).then((response)=>{
-        console.log(response)
+        
         return response
     })
 }
@@ -98,6 +98,26 @@ export async function update(props) {
 
     
 }
+export async function updateGrid(props) {
+    const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
+    console.log(props)
+    
+    
+        
+        
+    return await pb.collection(props.col).update(props.id, props.data)
+    .then(record => {
+            console.log('Record updated:', record);
+            return true
+    })
+    
+    
+    
+    
+    
+
+    
+}
 export async function updateUser({col,id,info}){
     const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
     await pb.collection(col).update(id, info)
@@ -129,6 +149,7 @@ export async function login({i,email,password,event}){
 export function getState (){
     const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
     if (pb.authStore.isValid){
+        console.log(pb.authStore)
         return pb.authStore.model
     }else{
         return false

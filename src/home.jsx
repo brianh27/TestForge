@@ -139,10 +139,10 @@ const Home = () => {
               </div>
               <div 
                 className="cursor-pointer p-4 bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 transition ease-in-out duration-300"
-                onClick={() => navigate('/tools')}
+                onClick={() => navigate('/place')}
               >
-                <p className="text-lg font-semibold text-gray-800">Tools</p>
-                <p className="text-sm text-gray-600">Significant Figures Calculator</p>
+                <p className="text-lg font-semibold text-gray-800">Place</p>
+                <p className="text-sm text-gray-600">Copied from r/place on Reddit. You can place pixels on a community board every 30 seconds.</p>
               </div>
             </div>
 

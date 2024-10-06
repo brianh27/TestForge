@@ -33,7 +33,9 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
           "streak": 0,
           "record": 0
         }
-      }
+
+      },
+      updates:[0]
     });
     
     if (t === false) {

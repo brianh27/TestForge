@@ -13,6 +13,7 @@ import Amc from './amc.jsx'
 import Tools from './tools.jsx'
 import Image from './image.jsx'
 import TOS from './tos.jsx'
+import PLACE from './place.jsx'
 function App() {
   return (
     <Router>
@@ -32,6 +33,7 @@ function App() {
           <Route path="/image" element={<Image/>} />
           <Route path="/" element={<Home/>} />
           <Route path="/tos" element={<TOS/>} />
+          <Route path="/place" element={<PLACE/>} />
           
         </Routes>
       </div>
