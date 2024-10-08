@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import OpenAI from "openai";
 
-const part1='sk-proj-qE6kcWMOHs-7A9bjcmMatv0etsUBLh_Ue9QEFjmgCeCUfUDiXYz'
-const part2='TAfiCzXT3BlbkFJ_wb6jEapceKbOkEEYe2wuuF56d6fA7bUgIR2Fit2Zyplk7arYCyvF_hVAA'
+const part1='sk-proj-JiSZqD3tJTaUuSva4C6jySQfEWKjaPkxJsdRfhme6HkoajoLu9U8H4010hx
+const part2='SbjTuC3h4bzbwHbT3BlbkFJoZxp2hlBF8zTf0-VqE-p9Ab8IuCoBLLeTIA5tQWS4tc7Qn9D4fUybda2wXO7W5i5IUe02z5EYA'
 
 const openai = new OpenAI({apiKey:part1+part2,dangerouslyAllowBrowser: true});
 
