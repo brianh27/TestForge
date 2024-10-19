@@ -9,7 +9,7 @@ import { useSearchParams,useNavigate } from 'react-router-dom';
 import NotFound from './home.jsx'
 import Bar from './bar.jsx'
 
-async function getResult({i,ans,storedAns,setMem,num}){
+async function getResult({i,ans,storedAns,setMem,num,ques}){
                
                 
                 
@@ -21,16 +21,19 @@ async function getResult({i,ans,storedAns,setMem,num}){
     setMem(gx); // Set the updated state
 
     
-    const val=await ask({description:`You are a helpful checker bot. You are provided two phrases, the left phrase is the users answer, and the right phrase is the correct solution. Return "Please Type an Anwser" if the anwser is blank. Return if the user answer is either "Excellent" (if there are just a few mistakes), "Incorrect"(if the general definition of the user anwser totally does not match the solution), or "Close enough" (which means the input is a synynom or has a definition similar to that of the solution)`,query:`User anwser: ${i} and the correct anwser: ${ans}`})
+    const val=await ask({description:`You are a helpful checker bot. You are provided two phrases, the left phrase is the users answer, and the right phrase is the correct solution. Return "Please Type an Anwser" if the anwser is blank. Return if the user answer is either "Excellent" (if there are just a few mistakes), "Incorrect"(if the general definition of the user anwser totally does not match the solution), or "Close enough" (which means the input is a synynom or has a definition similar to that of the solution). PLEASE MAKE SURE TO JUDGE THE ANSWSER WITH CONTEXT FROM THE QUESTION THEY ARE ANSWERING.`,query:`User anwser: ${i} and the correct anwser: ${ans}, the Question ${ques}`})
     const t = [...gx];
     t[num] = [...t[num]];
+    console.log(ans)
     t[num][1] = (
         <div>
             <p className={val==='Excellent'|val==='Close enough'?"text-4xl font-semibold text-green-500 font-poppins":"text-4xl font-semibold text-red-500 font-poppins"}>{val}</p>
             <p>Your answer: {i}</p>
-            <p>Correct answer: {ans}</p>
+            <p>Correct answer: {<span dangerouslySetInnerHTML={{ __html: ans }}/>}</p>
         </div>
+        
     );
+    console.log(t[num][1])
     setMem(t);
     
 }
@@ -167,7 +170,8 @@ const Guides=()=>{
     const [cards,setCards]=useState(null)
     const [notify,setNotify]=useState(0)
     const [param,setParam]=useState([10,8,2])
-    const notifications=['','Please Wait...','Please enter some thing academic related.','Generated practice test. Press this button to save.','Practice Test saved on server!']
+    const [progressBar,setProgressBar]=useState('0%')
+    const notifications=['',`Please Wait... ${progressBar}`,'Please enter some thing academic related.','Generated practice test. Press this button to save.','Practice Test saved on server!']
     
     const [formatted,setFormat]=useState(null)
     const [num,setNum]=useState(0)
@@ -198,7 +202,7 @@ const Guides=()=>{
     }
     
   
-    async function format({t,v,q,e,s,first}){
+    async function format({t,v,q,e,s,first,setProgressBar}){
         
         setNum(0)
         const info=[]
@@ -213,6 +217,8 @@ const Guides=()=>{
             }
             
         }
+        setProgressBar('86%')
+            
         const quiz=q.split('\n')
         
         for (let i=0;i<quiz.length/2;i+=1){
@@ -222,6 +228,8 @@ const Guides=()=>{
                 temp.push(response)
             }
         }
+        setProgressBar('91%')
+            
         const essay=e.split('\n')
         
         for (let i=0;i<essay.length;i+=1){
@@ -231,6 +239,8 @@ const Guides=()=>{
                 temp.push(response)
             }
         }
+        setProgressBar('100%')
+            
         info.push(t)
         info.push(s)
 
@@ -238,24 +248,69 @@ const Guides=()=>{
         
     }
     console.log(formatted)
-    async function generateCards(event){
+    async function generateCards({event,setProgressBar}){
         
         setNotify(1)
         const formData= new FormData(event.target)
         const response=formData.get('response')
         event.preventDefault()
-        const title=await ask({description:`You are a practice test maker. The user will send you a list of their notes or simply a general topic. If the response does not make sense in this context or is not academic, test, or learning related return blank. If the topic is academic return a phrase on one single line which is a title which best embodies the topic of the input the user submitted`,query:response})
+        const title=await ask({description:`You are a practice test maker. The user will send you a list of their notes or simply a general topic. If the response does not make sense in this context or is not academic, test, or learning related return blank. If the topic cannot be easily turned into a study guide with vocabulary words or quiz questions or essay prompts then return blank. If the topic is academic return a phrase on one single line which is a title which best embodies the topic of the input the user submitted`,query:response})
         if (title===''){
             setNotify(2)
         }else{
-            const v=await ask({description:`You are a practice test maker. Follow my directions EXACTLY, you must be EXACT. The user will send you a list of their notes or simply a general topic. Write EXACTLY ${param[0]} key vocabulary words, and its definition on the line below the question. Then separate the vocab and definition with a blank line. This is the order for an individual chunk: vocab, definition, blank line... and so on You will only be returning EXACTLY ${param[0]} of these chunks.`,query:response})
-           
-            const q=await ask({description:`You are a practice test maker. Follow my directions EXACTLY, you must be EXACT. The user will send you a list of their notes or simply a general topic that you must base all of your quiz questions around. Write EXACTLY ${param[1]} quiz questions (unnumbered) with  an answer of just a phrase or one word to it. Then space out different questions with a blank line. This is the order: question, answer, blank line... and so on For math and science questions only provide practice problems related to the subject.`,query:response})
+            setProgressBar('0%')
+            const v = await ask({
+                description: `You are a flashcard generator. Follow these instructions EXACTLY:
+              
+              - Always respond in the form of HTML code.
+              - Emphasize key parts using <b>, <i>, <u>, <sub>, <sup> or any other html feature wherever needed for clarity or emphasis.
+              - Do NOT include any titles, headers, or labels (ej. html header, or topic title.)
+              - Do NOT use <br> for line breaks. Use \\n as the only line break.
+              - The user will provide notes or a general topic. Based on that, write a flexible number of key vocabulary words (${param[0]} recommended) and their definitions.
+              - For each vocabulary word:
+                1. The vocabulary word goes on one line.
+                2. The definition is on the next line.
+                3. Insert one blank line after each vocab-definition pair (DO NOT USE <div> <br> to achieve this seperation).
+              - Treat each line as a separate HTML component`,
+                query: response
+              });
+            setProgressBar('23%')
+            const q = await ask({
+                description: `You are a practice quiz generator. Follow these instructions EXACTLY:
+              
+              - Always respond in the form of HTML code.
+              - Emphasize key parts using <b>, <i>, <u>, <sub>, <sup> or any other html feature wherever needed for clarity or emphasis.
+              - Do NOT include any titles, headers, or labels (ej. html header, or topic title.)
+              - Do NOT use <br> for line breaks. Use \\n as the only line break.
+              - The user will provide notes or a general topic. Based on that, write a flexible number of quiz questions (${param[1]} recommended) and their answer.
+              - The Question must be anwsered by a short phrase or a singular word. Prioritize math exersises for math topics.
+              - For each Quiz Chunk:
+                1. The Quiz Question goes on one line.
+                2. The Answer is on the next line.
+                3. Insert one blank line after each Question-Answer pair (DO NOT USE <div> <br> to achieve this seperation).
+              - Treat each line as a separate HTML component.`,
+                query: response
+            });
+            setProgressBar('47%')
             
-            const e=await ask({description:`You are a practice test maker. Follow my directions EXACTLY, you must be EXACT. The user will send you a list of their notes or simply a general topic. The only thing you will return is EXACTLY ${param[2]} essay prompts relating to the subject the user inputted. Seperate the essay prompts with one blank line. This is the order: Question, blank line, Question ... and so on`,query:response})
             
+            const e = await ask({
+                description: `You are a essay prompt generator. Follow these instructions EXACTLY:
+              
+              - Always respond in the form of HTML code.
+              - Emphasize key parts using <b>, <i>, <u>, <sub>, <sup> or any other html feature wherever needed for clarity or emphasis.
+              - Do NOT include any titles, headers, or labels (ej. html header, or topic title.)
+              - Do NOT use <br> for line breaks. Use \\n as the only line break.
+              - The user will provide notes or a general topic. Based on that, write a flexible number of essay prompts (${param[2]} recommended).
+              - For each Essay Chunk:
+                1. The Essay Prompt goes on one line.
+                3. Insert one blank line after each Essay  (DO NOT USE <div> <br> to achieve this seperation).
+              - Treat each line as a separate HTML component.`,
+                query: response
+            });
+            setProgressBar('69%')
             const subject =await ask({description:`Based on the description given either return the word "Math", "Science", "Literature", "Social Studies" or "Other" based on the subject matter that the user input is based most closely around.`,query:response})
-            
+            setProgressBar('74%')
             let vocabs=v.split('\n').filter(n=>n.trim()!='').join('\n')
             
             
@@ -264,11 +319,13 @@ const Guides=()=>{
             
             let essay=e.split('\n').filter(n=>n.trim()!='').join('\n')
             
-
+            
             setEdits([vocabs,quizs,essay,subject,title])
+            setProgressBar('80%')
             
-            
-            const temp=await format({t:title,v:vocabs,q:quizs,e:essay,s:subject,first:true})
+            const temp=await format({t:title,v:vocabs,q:quizs,e:essay,s:subject,first:true,setProgressBar:setProgressBar})
+            setProgressBar('100%')
+
             console.log(temp)
             setFormat(temp[0])
             setImages(temp[1])
@@ -339,7 +396,7 @@ const Guides=()=>{
             <Slider text={'Short Response'} code={1}></Slider>
             <Slider text={'Essay`s'} code={2}></Slider>
             <p></p>
-            <form onSubmit={generateCards}>
+            <form onSubmit={(event)=>generateCards({event:event,setProgressBar:setProgressBar})}>
                 
                 <textarea classname='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' id="response" name="response" rows="10" cols="50" placeholder="Paste your subject or your notes in the box below to generate a practice test"></textarea>
                 
@@ -408,7 +465,7 @@ const Guides=()=>{
                   onClick={flip === 0 ? () => setFlip(1) : () => setFlip(0)}
                   className="text-xl font-bold text-black-800 bg-gray-300 hover:bg-gray-400 text-black h-64 w-80 px-4 py-2 rounded-lg transition duration-300 ease-in-out overflow-hidden flex items-center justify-center"
                 >
-                  <span className="text-center break-words">{card[flip + 1]}</span>
+                  <span className="text-center break-words" dangerouslySetInnerHTML={{ __html: card[flip+1] }}/>
                   {images[num]!=null&&<img  className="max-w-[150px] max-h-[150px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                 </button>
               </div>
@@ -422,14 +479,17 @@ const Guides=()=>{
                 event.preventDefault();
                 const data=new FormData(event.target);
                 const i = data.get('inputField')
-                getResult({i,ans:card[2],storedAns:storedAns,setMem:setMem,num:num})
+                console.log(card[1])
+                getResult({i,ans:card[2],storedAns:storedAns,setMem:setMem,num:num,ques:card[1]})
                 
             }
             useEffect(()=>{const temp=0},[storedAns])
             console.log(storedAns)
+            
+            
             return(
                 <div>
-                    {card[1]}
+                    <p dangerouslySetInnerHTML={{ __html: card[1] }}/>
                     {images[num]!=null&&<img  className="max-w-[200px] max-h-[200px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                     <form onSubmit={handleSubmit}>
                         <input type="text" placeholder="Type your Answer Here" name='inputField'/>
@@ -449,7 +509,7 @@ const Guides=()=>{
                 temp[num][1]='Loading. Please Wait...'
                 setMem(temp)
                 
-                const val=await ask({description:`You are a helpful checker bot. The user response is on the left side. The prompt is on the right side. Give a detailed and nuaced feedback to this essay detailing its qualities and where it can be improved especially with inaccuracies and clearness and organization and concicseness. Limit it to under 150 words.`,query:`${props.i} and ${props.ans}`})
+                const val=await ask({description:`You are a helpful checker bot. Make the entire paragraph in html, and format it in a way that it can be integratted into a component using DangerouslySetInnerHTML. Please DO NOT give it any title or heading (ej. html or topic title). inThe user response is on the left side. The prompt is on the right side. Give a detailed and nuaced feedback to this essay detailing its qualities and where it can be improved especially with inaccuracies and clearness and organization and concicseness. Limit it to under 150 words. Feel free to use any <b> <u> <i> <sup> <sub> to emphasize certain parts.`,query:`${props.i} and ${props.ans}`})
                 //props.d(val)
                 const temps=[...storedAns]
                 temps[num][1]=val
@@ -461,7 +521,7 @@ const Guides=()=>{
             
             return(
                 <div>
-                    {card[1]}
+                    <p dangerouslySetInnerHTML={{ __html: card[1] }}/>
                     {images[num]!=null&&<img  className="max-w-[200px] max-h-[200px] w-auto h-auto" src={images[num]} alt="From Google Images" />}
                     <form onSubmit={(event) => {
                         
@@ -480,7 +540,7 @@ const Guides=()=>{
 
                         <p><button className='bg-blue-500 text-white px-1.5 py-0.2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150' type="submit" disabled={storedAns[num][1]==="Loading. Please Wait..."}>Submit</button></p>
                     </form>
-                    {storedAns[num][1]}
+                    <p dangerouslySetInnerHTML={{__html: storedAns[num][1] }} />
                 </div>
             
             )

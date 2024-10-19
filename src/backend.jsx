@@ -56,6 +56,7 @@ export async function insert(props){
     return pb.collection(props.col).create(props.data).then(record=>{
         return record.id
     }).catch(error=>{
+        console.log(props.data)
         return false
     })
     
@@ -125,26 +126,39 @@ export async function updateUser({col,id,info}){
         console.log('Record updated:', record);
     })
 }
-export async function login({i,email,password,event}){
-    console.log('a')
-    
-    i(true)
+async function checks({id}){
     const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
-    return await pb.collection('users').authWithPassword(email,password)
-    .then(()=>{
-        console.log('logged in ')
-        i(false)
+    const userData=await pb.collection('users').getOne(id)
+    if (userData.verified){
         return true
-    })
-    .catch(e => {
-        console.log(e)
-        i(false)
+    }else{
+        pb.authStore.clear()
         return false
-    });
-    
-
-
-
+    }
+}
+export async function login({ i, email, password, event }) {
+    console.log('a');
+    const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
+    try {
+        i(true);
+        
+        await pb.collection('users').authWithPassword(email, password);
+        
+        const id = pb.authStore.model.id;
+        const temp = await checks({ id: id });
+        
+        i(false);
+        return temp;
+    } catch (e) {
+        console.log(e);
+        i(false);
+        return false;
+    }
+}
+export async function verify({email}){
+    const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
+    const res = await pb.collection("users").requestVerification(email)
+    console.log(res)
 }
 export function getState (){
     const pb = new PocketBase('https://ai-study-guides.pockethost.io/');

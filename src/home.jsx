@@ -53,7 +53,7 @@ const Home = () => {
             } else {
               clearInterval(interval);
             }
-          }, 65); // Adjust speed here
+          }, 85); // Adjust speed here
           observer.unobserve(entry.target);  // Stop observing after counting starts
         }
       });
@@ -77,7 +77,7 @@ const Home = () => {
   return (
     <body className="bg-black font-sans">
 
-      {/* Top Navigation Bar */}
+      
       {message != null && 
         <div className={`text-black-500 bg-red-400 text-xl border-solid border-2 border-red-700 rounded-md p-5 mb-2 fixed top-0 left-1/2 transform -translate-x-1/2 z-10 font-bold transition-all duration-500 ease-in-out ${visible ? 'opacity-100' : 'opacity-0'}`}>
           {message}
