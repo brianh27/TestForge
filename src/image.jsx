@@ -57,7 +57,7 @@ const Image = () => {
             
             {image && (
                 <div>
-                    <img src={image} 
+                    <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.outsideonline.com%2Fculture%2Factive-families%2Fhow-to-read-dog-body-language-happy-aggressive%2F&psig=AOvVaw1bH_ZSSKXFQ-ukNA86bno9&ust=1729807834537000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLC5y73CpYkDFQAAAAAdAAAAABAE" 
      srcset="{image_large} 2x" 
      alt="Generated from prompt" 
      class="w-[150%] h-auto object-contain" />
