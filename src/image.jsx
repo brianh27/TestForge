@@ -57,7 +57,8 @@ const Image = () => {
             
             {image && (
                 <div>
-                    <img src={image} alt="Generated from prompt" className="w-[120%] h-auto" />
+                    <img src={image} alt="Generated from prompt" class="w-[120%] h-auto object-contain" />
+
                 </div>
             )}
         </div>
