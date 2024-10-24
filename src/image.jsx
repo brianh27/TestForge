@@ -57,12 +57,7 @@ const Image = () => {
             
             {image && (
                 <div>
-                    <img src="https://cdn.outsideonline.com/wp-content/uploads/2023/03/Funny_Dog_H.jpg?crop=16:9&width=960&enable=upscale&quality=100" 
-     srcset="{image_large} 2x" 
-     alt="Generated from prompt" 
-     class="w-[150%] h-auto object-contain" />
-
-
+                    <img src={image} width={800} alt="Generated from prompt" />
                 </div>
             )}
         </div>

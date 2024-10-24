@@ -32,7 +32,7 @@ export async function imagine({prompt}){
         
         
         
-        return response.data.items[0].image.thumbnailLink
+        return response.data.items[0].link
     } catch (error) {
         console.error(error);
         return null
@@ -145,10 +145,10 @@ export async function login({ i, email, password, event }) {
         await pb.collection('users').authWithPassword(email, password);
         
         const id = pb.authStore.model.id;
-        const temp = await checks({ id: id });
+        //const temp = await checks({ id: id });
         
         i(false);
-        return temp;
+        return true;
     } catch (e) {
         console.log(e);
         i(false);

@@ -9,7 +9,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
     'Please type a username', 'Your username is not available', 'Your username must only have letters', "You're email is not available", 
     'Please make sure to have \na proper email', 'Your username must be appropriate', 'Your password must be \n between 5-25 characters', 
     'Your password must contain a 3 symbols', 'Your password must \n contain the word cow', 'Your password must be appropriate', 
-    'Loading...', 'Account created! Please Verify Email', 'Error in creating account. \n Please check info then retry...'
+    'Loading...', 'Account created! Please Sign In!', 'Error in creating account. \n Please check info then retry...'
   ];
   const navigate = useNavigate();
   
@@ -44,7 +44,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
       setError(12);
       return;
     }
-    verify({email:newEmail})
+    //verify({email:newEmail})
     setDisable(true)
     setError(11);
   }
@@ -65,33 +65,35 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
                 </p>
             )
         );
-    } else if (error === 11) {
+    //#uncomment in order to resinstall email verification
+    // } else if (error === 11) {
 
-        return (
-          <div className="flex justify-center">
-          <p className="text-red-500 text-center">
-              {'Account Created!\nPlease Verify your Email\n Then Sign In'.split('\n').map((line, index) => (
-                  <span key={index}>{line}<br /></span>
-              ))}
-          </p>
-          <p>&nbsp;</p>
-          <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
-              onClick={() => {
-                  setSend(true);
+    //     return (
+    //       <div className="flex justify-center">
+    //       <p className="text-red-500 text-center">
+    //           {'Account Created!\nPlease Verify your Email\n Then Sign In'.split('\n').map((line, index) => (
+    //               <span key={index}>{line}<br /></span>
+    //           ))}
+    //       </p>
+    //       <p>&nbsp;</p>
+    //       <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+    //           onClick={() => {
+    //               setSend(true);
                   
-                  setTimeout(() => {
-                      setSend(false);
-                  }, 30000);
-                  verify({email:newEmail})
-              }}
-              disabled={send}
-          >
-              Resend Email
-          </button>
-      </div>
+    //               setTimeout(() => {
+    //                   setSend(false);
+    //               }, 30000);
+    //               verify({email:newEmail})
+    //           }}
+    //           disabled={send}
+    //       >
+    //           Resend Email
+    //       </button>
+    //   </div>
       
-        );
-    } else {
+    //     );
+    // 
+      } else {
         return (
             <p className="text-red-500 text-center">
                 {errors[error].split('\n').map((line, index) => (
