@@ -14,6 +14,8 @@ import Tools from './tools.jsx'
 import Image from './image.jsx'
 import TOS from './tos.jsx'
 import PLACE from './place.jsx'
+import Upload from './upload.jsx'
+
 function App() {
   return (
     <Router>
@@ -34,6 +36,7 @@ function App() {
           <Route path="/" element={<Home/>} />
           <Route path="/tos" element={<TOS/>} />
           <Route path="/place" element={<PLACE/>} />
+          <Route path="/upload" element={<Upload/>} />
           
         </Routes>
       </div>

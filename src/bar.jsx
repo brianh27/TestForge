@@ -19,6 +19,7 @@ const Bar=({user})=>{
               
               <a onClick={() => navigate('/guides')} className="text-gray-300 hover:text-white mx-4 cursor-pointer">Guides</a>
               <a onClick={() => navigate('/puzzle')} className="text-gray-300 hover:text-white mx-4 cursor-pointer">Puzzles</a>
+              <a onClick={() => navigate('/upload')} className="text-gray-300 hover:text-white mx-4 cursor-pointer">Upload</a>
               <a onClick={() => navigate('/rush/main')} className="text-gray-300 hover:text-white mx-4 cursor-pointer">Rush</a>
               <a onClick={() => navigate('/tools')} className="text-gray-300 hover:text-white mx-4 cursor-pointer">Tools</a>
                 <a href='https://discord.gg/UQbMpFyrPh' target="_blank" className="text-gray-300 hover:text-white mx-4 cursor-pointer">Join the Discord</a>

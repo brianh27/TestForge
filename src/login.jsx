@@ -153,7 +153,7 @@ const Login = () => {
       if (success) {
         navigate('/');
       } else {
-        setMessage('Wrong username or password');
+        setMessage('Wrong username or password\n or have not verified email');
       }
     };
 

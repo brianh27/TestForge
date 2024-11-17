@@ -46,8 +46,8 @@ export default async function check({mail,newUser,newPass,setError,usernam,res,s
       
       }else if (newPass.length>25 ||newPass.length<5){
           setError(6)
-      //}else if (  newPass.match(/[^\w\s]/g)&&symbols.length<3){
-        //  setError(7)
+      }else if (  newPass.match(/[^\w\s]/g)&&symbols.length<3){
+          setError(7)
       //}else if (newPass.toLowerCase().includes('cow')===false){
         //  setError(8)
       }else{

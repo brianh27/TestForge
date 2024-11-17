@@ -132,6 +132,13 @@ const Home = () => {
               </div>
               <div 
                 className="cursor-pointer p-4 bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 transition ease-in-out duration-300"
+                onClick={() => navigate('/upload')}
+              >
+                <p className="text-lg font-semibold text-gray-800">Upload Files</p>
+                <p className="text-sm text-gray-600">Share your Text Files with Custom Links</p>
+              </div>
+              <div 
+                className="cursor-pointer p-4 bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 transition ease-in-out duration-300"
                 onClick={() => navigate('/rush/main')}
               >
                 <p className="text-lg font-semibold text-gray-800">Rush</p>
