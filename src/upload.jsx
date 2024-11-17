@@ -93,7 +93,7 @@ const Tools = () => {
             id="response"
             name="response"
             rows="5"
-            placeholder="Type your Text Here Diddy"
+            placeholder="Type your Text Here"
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
