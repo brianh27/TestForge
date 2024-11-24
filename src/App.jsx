@@ -15,6 +15,7 @@ import Image from './image.jsx'
 import TOS from './tos.jsx'
 import PLACE from './place.jsx'
 import Upload from './upload.jsx'
+import Builder from './builder.jsx'
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/tos" element={<TOS/>} />
           <Route path="/place" element={<PLACE/>} />
           <Route path="/upload" element={<Upload/>} />
+          <Route path="/builder" element={<Builder/>} />
           
         </Routes>
       </div>

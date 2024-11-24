@@ -4,7 +4,7 @@ import { insert, getState, getTests } from './backend.jsx';
 import Bar from './bar.jsx';
 
 async function checks({ name, text, setMessage, files, userData }) {
-  if (text.length > 100000) {
+  if (text.length > 1000) {
     setMessage('Text is too long');
   } else if (/^[a-z]+$/.test(name) === false) {
     setMessage('Name must be of lowercase letters');
@@ -93,7 +93,7 @@ const Tools = () => {
             id="response"
             name="response"
             rows="5"
-            placeholder="Type your Text Here"
+            placeholder="Type your Text Here Diddy"
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
