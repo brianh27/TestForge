@@ -5,20 +5,23 @@ import Bar from './bar.jsx';
 import ask from './aiget.jsx';
 
 async function gen({site, setSite,setLink,userData }) {
-    const input = prompt("Describe the Website you Want to Build");
+    const input = prompt("Describe the Website you Want to Build. Eg. List out the different sections, the topic, the purpose.");
 
     // Get the generated HTML content from the ask function
     const generatedHtml = await ask({
-        description: "You are a website builder bot. Your task is to generate HTML code for a modern, clean, and responsive website with inline CSS styles for all elements. Use styles like font-family, background-color, padding, border-radius, text-align, font-size, and color to style the header, navigation menu, product displays, and footer. Ensure that the layout is simple and visually appealing, with sections such as a header with a title, a navigation bar with links, a section for products, and a footer. All styles should be applied inline directly in the HTML tags. Please only return the HTML code with inline styles—do not include any extra English or explanations. DO NOT INCLUDE AN HTML HEADER. Also don't include any style header like style=font-family: Arial, sans-serif; margin: 0; padding: 0;. The styles I provided to you will be default you shall always use. Also exclude the ```html text at the begining and the end. ALSO somewhere, you must add a watermark for testforger.vercel.app, and promote it and say that it is the sponsor of the website",        query: input
+        description: `You are a website builder bot. If the website prompt is inapprioriate, irrelevant, or confusing, just return a generic website template. Your task is to generate HTML code for a modern, clean, and responsive website with inline CSS styles for all elements. Use styles like font-family, background-color, padding, border-radius, text-align, font-size, and color to style the header, navigation menu, product displays, and footer. Ensure that the layout is simple and visually appealing, with sections such as a header with a title, a navigation bar with links, a section for products, and a footer. All styles should be applied inline directly in the HTML tags. Please only return the HTML code with inline styles—do not include any extra English or explanations. DO NOT INCLUDE AN HTML HEADER. Also don't include any style header like style=font-family: Arial, sans-serif; margin: 0; padding: 0;. The styles I provided to you will be default you shall always use. Also exclude the ALSO somewhere, you must add a watermark for ${window.location.origin}, and promote it and say that it is the sponsor of the website.`,        query: input
     });
-    const cleanedHtml = generatedHtml.replace(/<head>.*?<\/head>/s, '').replace(/<body>|<\/body>/g, '');
+    
+    
     const seperated= await ask({
       description: "Using comments to label and seperate this HTML code so that it turns into different sections of the website. ONLY RETURN THE HTML CODE WITH COMMENTS. NO EXTRA ENGLISH.",
-      query: cleanedHtml
+      query: generatedHtml
     });
 
     
-    let t= seperated.split('<!--')
+    const cleanedHtml = seperated.split('```html').join('')
+    
+    let t=cleanedHtml.split('<!--')
     let temp=[]
     for (let a=0;a<t.length;a++){
       const component=t[a].split('-->')
@@ -42,7 +45,7 @@ async function gen({site, setSite,setLink,userData }) {
 async function call({ai,text,setText,setLoad}){
   setLoad(true)
   const edited = await ask({
-    description: "You are a code editing bot; The user will provide you instructions as well as their code. If their instruction does not make sense or requires you to do something other than editing the code, simply just return the provided code verbatim. If not, then edit the code based on their instructions and ONLY return the code with the changes. DO NOT RETURN ANYTHING ELSE.",        query: ai+text
+    description: `You are a code editing bot; The user will provide you instructions as well as their code. If their instruction does not make sense or requires you to do something other than editing the code, simply just return the provided code verbatim. If not, then edit the code based on their instructions and ONLY return the code with the changes. DO NOT RETURN ANYTHING ELSE.`,        query: ai+text
   });
   setText(edited)
   setLoad(false)
@@ -53,15 +56,17 @@ const Editor=({setSite, setLoading, select,setSelect,site,trig,text,setText,link
   const [loading,setLoad]=useState(false)
   
   return(
-    <div>
+    <div className='relative'>
             <p>&nbsp;</p>
-            
-            <a href={"https://testforger.vercel.app/builder?v="+link} target="_blank">Click to View Website</a>
-            <p><a href={"https://testforger.vercel.app/builder?e="+link} target="_blank">Click to Edit Website</a></p>
+            <div className='absolute top-5 left-3 text-blue-500'>
+            <a href={window.location.origin+"/builder?v="+link} target="_blank">Click to View Website</a>
+            <p><a href={window.location.origin+"/builder?e="+link} target="_blank">Click to Edit Website</a></p>
+            </div>
             <p>&nbsp;</p>
-            
+            <p>&nbsp;</p>
+           
               <button
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+                className="absolute top-5 right-5 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
                 onClick={() => {
                   setSite(null);
                   setLoading(false);
@@ -74,6 +79,17 @@ const Editor=({setSite, setLoading, select,setSelect,site,trig,text,setText,link
                 <p>Select a part of your Website to Edit</p>
               ) : (
                 <div>
+                  <button onClick={ ()=>{
+                    let temp=site
+                    
+                    temp.splice(select,1)
+                    setSite(temp)
+                    change({col:"Websites",data:{HTML:temp},id:link})
+
+                    setSelect(null)
+                  }
+                  }
+                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">Delete Section</button>
                   <p>{site[select][0]}</p>
                   <textarea placeholder="Enter your Code For This Section Here" className="w-full h-80 p-4 border-2 border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500" value={text} onChange={(e)=>setText(e.target.value)} ></textarea>
                   <button
@@ -89,7 +105,7 @@ const Editor=({setSite, setLoading, select,setSelect,site,trig,text,setText,link
                   Propagate Changes
                 </button>
                 <p> &nbsp;</p>
-                <textarea placeholder="Type your AI instructions here" className="w-full h-40 p-4 border-2 border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500" value={ai} onChange={(e)=>setAi(e.target.value)} ></textarea>
+                <textarea placeholder="Type your AI instructions here. This is where to provide links to images, outside stuff. ect." className="w-full h-40 p-4 border-2 border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500" value={ai} onChange={(e)=>setAi(e.target.value)} ></textarea>
                 {loading ? (
                   <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-green-500 border-solid"></div>
                 ) : (
@@ -180,7 +196,7 @@ const Builder = () => {
     const [dummy,setDummy]=useState(0)
     const [link,setLink]=useState('')
     const [view,setView]=useState(0)
-    
+    const template='<div> This is a New Section </div>'
     useEffect(() => {
       if (userData === null) {
         initialize({setUser,setSite,setView,navigate,setLink})
@@ -200,7 +216,7 @@ const Builder = () => {
         <p>Loading Content....</p>
       );
     }
-    
+   
     if (view===0){
       return (
         <div>
@@ -216,7 +232,7 @@ const Builder = () => {
                 {loading?<div className="animate-spin rounded-full h-12 w-12 border-t-4 border-green-500 border-solid"></div>:<button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300" onClick={() => {gen({site, setLink,setSite,userData});setLoading(true)}}>Press To Generate Website</button>}
               </div>
             ) : (
-              <div>
+              <div key={69}>
                 
                 <div
                   style={{
@@ -227,8 +243,37 @@ const Builder = () => {
                   }}
                 >
                   {site.map((html, index) => (
-                    <div onClick={()=>{setSelect(index);setText(html[1])}} key={index} dangerouslySetInnerHTML={{ __html: html[html.length-1] }} />
-                  ))}
+                <div className="relative">
+                  <div
+                    key={index}
+                    id="section"
+                    onClick={() => {
+                      setSelect(index);
+                      setText(html[1]);
+                    }}
+                    dangerouslySetInnerHTML={{ __html: html[html.length - 1] }}
+                  />
+                  <button 
+                    key={index+10000}
+                    onClick={
+                      ()=>{
+                        setSelect(index+1)
+                        let temp=site
+                        temp.splice(index+1,0,['New Section',template])
+                        setSite(temp)
+                        change({col:"Websites",data:{HTML:temp},id:link})
+                        setText(template)
+                        triggerUpdate()
+                      }
+                    }
+                    className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-200 text-black rounded-full text-sm flex items-center justify-center shadow transition transform hover:scale-110 hover:shadow-lg z-10">
+                    +
+                  </button>
+
+
+
+                </div>
+              ))}
                 </div>
               </div>
               
@@ -252,15 +297,15 @@ const Builder = () => {
         </div>
       )
     }else{
+      console.log(site)
       return(
         
 
       
-     
           
-              <div className="flex justify-center items-center h-screen w-full">
+              <div className="flex justify-center items-center min-h-screen w-full">
             
-              <div className='w-full max-w-screen-xl'>
+              <div className='w-full max-w-screen-l'>
                 
                 <div
                   style={{
@@ -271,7 +316,10 @@ const Builder = () => {
                   }}
                 >
                   {site.map((html, index) => (
-                    <div key={index} dangerouslySetInnerHTML={{ __html: html[html.length-1] }} />
+                    
+                    <div key={index+100000} dangerouslySetInnerHTML={{ __html: html[html.length-1] }} />
+                    
+                    
                   ))}
                 </div>
               </div>

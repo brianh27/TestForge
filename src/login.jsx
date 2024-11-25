@@ -124,7 +124,7 @@ const Create = ({ newEmail, upMail, newPassConf, upPassConf, setState, newUser, 
         </div>
         <div className="flex items-center mb-4">
           <input type="checkbox" id="checkbox1" name="agreement" className="mr-2"   checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)}/>
-          <label htmlFor="checkbox1">I agree to the <a href="https://testforger.vercel.app/tos" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">terms and conditions</a></label>
+          <label htmlFor="checkbox1">I agree to the <a href={window.location.origin+"/tos"} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">terms and conditions</a></label>
         </div>
         <Messages className='flex items-center mb-4'></Messages>
       </form>

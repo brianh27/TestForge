@@ -12,7 +12,7 @@ async function checks({ name, text, setMessage, files, userData }) {
     setMessage('Name is taken');
   } else {
     await insert({ col: 'Files', data: { Name: name, Text: text, Author: userData.username } });
-    setMessage(`File uploaded. You can access it using this link: https://testforger.vercel.app/upload?p=${name}`);
+    setMessage(`File uploaded. You can access it using this link: ${window.location.origin}/upload?p=${name}`);
   }
 }
 
