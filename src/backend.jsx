@@ -49,6 +49,15 @@ export async function getTests(props){
         return response
     })
 }
+export async function change(props){
+    
+    const pb = new PocketBase('https://ai-study-guides.pockethost.io/');
+    await pb.collection(props.col).update(props.id, props.data).then((response)=>{
+        console.log("Done")
+    }).catch(
+        console.log('Error')
+    )
+}
 
 export async function insert(props){
     

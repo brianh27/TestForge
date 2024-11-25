@@ -19,7 +19,11 @@ const Home = () => {
       if (temp === false) {
         const myParam = urlParams.get('signedIn');
         if (myParam !== null) {
-          setMessage('Please Sign In \n Before Using Services');
+          if (myParam===0){
+            setMessage('Please Sign In \n Before Using Services');
+          }else{
+            setMessage('Invalid Link');
+          }
           setVisible(true);
           setTimeout(() => setVisible(false), 2000); 
           setTimeout(() => setMessage(null), 3000);
