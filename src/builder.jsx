@@ -1,17 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { insert, getState, change,getTests,getData } from './backend.jsx';
+import { insert,imagine, getState, change,getTests,getData } from './backend.jsx';
 import Bar from './bar.jsx';
 import ask from './aiget.jsx';
 
+
+// Example function to check if the URL is an image link
+function isValidImageURL(url) {
+  return new Promise((resolve) => {
+    const img = new Image(); // Create a new Image object
+    img.onload = () => resolve(true);  // Image successfully loaded
+    img.onerror = () => resolve(false); // Image failed to load
+
+    img.src = url;  // Set the image source to the provided URL
+  });
+}
+
+
+
+async function replaceSrcWithGeneratedLinks({html}) {
+  console.log(html)
+  const regex = /src="([^"]*)"/g;
+
+  // Use matchAll to get all matches of the regex
+  const matches = [...html.matchAll(regex)];
+
+  // Replace src attributes asynchronously
+  for (const match of matches) {
+      const originalMatch = match[0]; // e.g., src="images/picture1.jpg"
+      const srcValue = match[1]; // e.g., images/picture1.jpg
+      const temp=await isValidImageURL(srcValue)
+      console.log(temp)
+      if (temp){
+        continue
+      }
+      // Generate the new image link asynchronously
+      const imageLink = await imagine({ prompt: srcValue });
+
+      // Replace the original match in the HTML string
+      html = html.replace(originalMatch, `src="${imageLink}"`);
+  }
+
+  return html;
+}
 async function gen({site, setSite,setLink,userData }) {
     const input = prompt("Describe the Website you Want to Build. Eg. List out the different sections, the topic, the purpose.");
 
     // Get the generated HTML content from the ask function
-    const generatedHtml = await ask({
-        description: `You are a website builder bot. If the website prompt is inapprioriate, irrelevant, or confusing, just return a generic website template. Your task is to generate HTML code for a modern, clean, and responsive website with inline CSS styles for all elements. Use styles like font-family, background-color, padding, border-radius, text-align, font-size, and color to style the header, navigation menu, product displays, and footer. Ensure that the layout is simple and visually appealing, with sections such as a header with a title, a navigation bar with links, a section for products, and a footer. All styles should be applied inline directly in the HTML tags. Please only return the HTML code with inline styles—do not include any extra English or explanations. DO NOT INCLUDE AN HTML HEADER. Also don't include any style header like style=font-family: Arial, sans-serif; margin: 0; padding: 0;. The styles I provided to you will be default you shall always use. Also exclude the ALSO somewhere, you must add a watermark for ${window.location.origin}, and promote it and say that it is the sponsor of the website.`,        query: input
+    const Html = await ask({
+        description: `You are a website builder bot. If the website prompt is inapprioriate, irrelevant, or confusing, just return a generic website template. Your task is to generate HTML code for a modern, clean, and responsive website with inline CSS styles for all elements. Use styles like font-family, background-color, padding, border-radius, text-align, font-size, and color to style the header, navigation menu, product displays, and footer. Ensure that the layout is simple and visually appealing, with sections such as a header with a title, a navigation bar with links, a section for products, and a footer. All styles should be applied inline directly in the HTML tags. Please only return the HTML code with inline styles—do not include any extra English or explanations. DO NOT INCLUDE AN HTML HEADER. Also don't include any style header like style=font-family: Arial, sans-serif; margin: 0; padding: 0;. The styles I provided to you will be default you shall always use. Also exclude the ALSO somewhere, you must add a watermark for ${window.location.origin}, and promote it and say that it is the sponsor of the website. If you use img to place image, make the src link include the description of the picture`,        query: input
     });
-    
+    let generatedHtml=await replaceSrcWithGeneratedLinks({html:Html})
     
     const seperated= await ask({
       description: "Using comments to label and seperate this HTML code so that it turns into different sections of the website. ONLY RETURN THE HTML CODE WITH COMMENTS. NO EXTRA ENGLISH.",
@@ -45,9 +84,15 @@ async function gen({site, setSite,setLink,userData }) {
 async function call({ai,text,setText,setLoad}){
   setLoad(true)
   const edited = await ask({
-    description: `You are a code editing bot; The user will provide you instructions as well as their code. If their instruction does not make sense or requires you to do something other than editing the code, simply just return the provided code verbatim. If not, then edit the code based on their instructions and ONLY return the code with the changes. DO NOT RETURN ANYTHING ELSE.`,        query: ai+text
+    description: `You are a code editing bot; The user will provide you instructions as well as their code. If their instruction does not make sense or requires you to do something other than editing the code, simply just return the provided code verbatim. 
+    If the user specifies you to alter any of the images simply replace the string attached to the src of the indicated img with a brief description of the image 
+    that would best fit the users needs/description. IF YOU CHANGE THE SRC STRING, DO NOT REPLACE IT WITH A LINK. JUST REPLACE IT WITH ENGLISH WORDS.
+    If not, then edit the code based on their instructions and ONLY return the code with the changes. 
+    DO NOT RETURN ANYTHING ELSE.`,        query: ai+text
   });
-  setText(edited)
+  console.log(edited)
+  let done = await replaceSrcWithGeneratedLinks({html:edited})
+  setText(done)
   setLoad(false)
 
 }

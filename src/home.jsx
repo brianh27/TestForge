@@ -19,20 +19,22 @@ const Home = () => {
       if (temp === false) {
         const myParam = urlParams.get('signedIn');
         if (myParam !== null) {
-          if (myParam==='0'){
+
+          if (myParam === '0') { // Compare with string "0"
             setMessage('Please Sign In \n Before Using Services');
-          }else{
+          } else {
             setMessage('Invalid Link');
           }
           setVisible(true);
-          setTimeout(() => setVisible(false), 2000); 
+          setTimeout(() => setVisible(false), 2000);
           setTimeout(() => setMessage(null), 3000);
         }
       } else {
         setUser(temp);
       }
-    }
-  }, [user, navigate]);
+   
+  
+  }  }, [user, navigate]);
 
   useEffect(() => {
     async function getCount() {

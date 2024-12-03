@@ -4,7 +4,7 @@ import { insert, getState, getTests } from './backend.jsx';
 import Bar from './bar.jsx';
 
 async function checks({ name, text, setMessage, files, userData }) {
-  if (text.length > 100000) {
+  if (text.length > 1000000) {
     setMessage('Text is too long');
   } else if (/^[a-z]+$/.test(name) === false) {
     setMessage('Name must be of lowercase letters');
