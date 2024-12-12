@@ -25,6 +25,7 @@ export default async function userCheck(props){
     })
 }
 export async function imagine({prompt}){
+    console.log(prompt)
     if (prompt==='ben george'){
         return 'https://cdn.discordapp.com/attachments/1241393677058834453/1316840109324374077/image.jpg?ex=675c826b&is=675b30eb&hm=520f4b292bef660f048e0e69920fca9af8e7da724eb809f4ebace14b516bd9f7&"
     }
