@@ -4,8 +4,8 @@ import userCheck,{insert,getState,getData,getTests,update,updateUser} from './ba
 import { useSearchParams,useNavigate, Link} from 'react-router-dom';
 import NotFound from './home.jsx'
 function CountdownTimer({reset,setCond}) {
-    const [time, setTime] = useState(60); // Initial time in seconds
-    const [isActive, setIsActive] = useState(true); // Timer active state
+    const [time, setTime] = useState(60); 
+    const [isActive, setIsActive] = useState(true);
   
     useEffect(() => {
       let timer;
