@@ -11,17 +11,17 @@ function CountdownTimer({reset,setCond}) {
       let timer;
       
       if (isActive && time > 0) {
-        // Set up the timer to decrease time every second
+        
         timer = setInterval(() => {
           setTime(prevTime => prevTime - 1);
         }, 1000);
       } else if (time === 0) {
-        // Stop the timer when time reaches 0
+        
         setIsActive(false);
         setCond(true)
       }
   
-      // Cleanup the interval on component unmount or when timer stops
+      
       return () => clearInterval(timer);
     }, [isActive, time]);
   
@@ -30,11 +30,11 @@ function CountdownTimer({reset,setCond}) {
         <h1 className="text-3xl font-bold text-gray-800">
           Time Remaining: {time}s
         </h1>
-        {/* Optional button to reset the timer */}
+        
         <button
           onClick={() => {
-            setTime(60); // Reset time to 60 seconds
-            setIsActive(true); // Activate timer
+            setTime(60); 
+            setIsActive(true); 
             setCond(false);
             reset();
           }}
