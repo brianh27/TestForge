@@ -5,14 +5,14 @@ import Bar from './bar.jsx';
 import ask from './aiget.jsx';
 
 
-// Example function to check if the URL is an image link
+
 function isValidImageURL(url) {
   return new Promise((resolve) => {
-    const img = new Image(); // Create a new Image object
-    img.onload = () => resolve(true);  // Image successfully loaded
-    img.onerror = () => resolve(false); // Image failed to load
+    const img = new Image(); 
+    img.onload = () => resolve(true);  
+    img.onerror = () => resolve(false);
 
-    img.src = url;  // Set the image source to the provided URL
+    img.src = url;  
   });
 }
 
@@ -22,22 +22,22 @@ async function replaceSrcWithGeneratedLinks({html}) {
   console.log(html)
   const regex = /src="([^"]*)"/g;
 
-  // Use matchAll to get all matches of the regex
+
   const matches = [...html.matchAll(regex)];
 
-  // Replace src attributes asynchronously
+
   for (const match of matches) {
-      const originalMatch = match[0]; // e.g., src="images/picture1.jpg"
-      const srcValue = match[1]; // e.g., images/picture1.jpg
+      const originalMatch = match[0]; 
+      const srcValue = match[1]; 
       const temp=await isValidImageURL(srcValue)
       console.log(temp)
       if (temp){
         continue
       }
-      // Generate the new image link asynchronously
+
       const imageLink = await imagine({ prompt: srcValue });
 
-      // Replace the original match in the HTML string
+
       html = html.replace(originalMatch, `src="${imageLink}"`);
   }
 
@@ -46,7 +46,7 @@ async function replaceSrcWithGeneratedLinks({html}) {
 async function gen({site, setSite,setLink,userData }) {
     const input = prompt("Describe the Website you Want to Build. Eg. List out the different sections, the topic, the purpose.");
 
-    // Get the generated HTML content from the ask function
+
     const Html = await ask({
         description: `You are a website builder bot. If the website prompt is inapprioriate, irrelevant, or confusing, just return a generic website template. Your task is to generate HTML code for a modern, clean, and responsive website with inline CSS styles for all elements. Use styles like font-family, background-color, padding, border-radius, text-align, font-size, and color to style the header, navigation menu, product displays, and footer. Ensure that the layout is simple and visually appealing, with sections such as a header with a title, a navigation bar with links, a section for products, and a footer. All styles should be applied inline directly in the HTML tags. Please only return the HTML code with inline styles—do not include any extra English or explanations. DO NOT INCLUDE AN HTML HEADER. Also don't include any style header like style=font-family: Arial, sans-serif; margin: 0; padding: 0;. The styles I provided to you will be default you shall always use. Also exclude the ALSO somewhere, you must add a watermark for ${window.location.origin}, and promote it and say that it is the sponsor of the website. If you use img to place image, make the src link include the description of the picture`,        query: input
     });
@@ -66,19 +66,19 @@ async function gen({site, setSite,setLink,userData }) {
       const component=t[a].split('-->')
       temp.push(component)
     }
-    // Set the cleaned HTML content for rendering
+
     setSite(temp);
 
     const lin=await insert({col:'Websites',data:{Author:userData.username,HTML:temp}})
     setLink(lin)
     window.history.pushState({}, '', window.location.pathname);
-    const currentUrl = window.location.href; // Get the current URL
+    const currentUrl = window.location.href;
     const newUrl = currentUrl.includes('?') 
-      ? `${currentUrl}&e=${lin}` // If there's already a query string, append the new one
-      : `${currentUrl}?e=${lin}`; // Otherwise, add the query string
+      ? `${currentUrl}&e=${lin}`
+      : `${currentUrl}?e=${lin}`; 
 
     window.history.pushState({}, '', newUrl)
-    //make link custom then make updates to that code state changes. viewer gets different. only user who created can edit.
+    
 }
 
 async function call({ai,text,setText,setLoad}){
@@ -182,10 +182,10 @@ async function initialize({setUser,navigate,setView,setSite,setLink}){
           setUser(temp);
         }
         if (queryString) {
-          // Create a URLSearchParams object to parse the query string
+          
           const urlParams = new URLSearchParams(queryString);
 
-          // Iterate over all query parameters and log them
+          
           let count=0
           let key=null
           let val=null
