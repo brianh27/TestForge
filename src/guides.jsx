@@ -16,9 +16,9 @@ async function getResult({i,ans,storedAns,setMem,num,ques}){
     const gx = [...storedAns];
     gx[num] = [...gx[num]];
 
-    // Update the specific value
+    
     gx[num][1] = "Loading, please wait...";
-    setMem(gx); // Set the updated state
+    setMem(gx); 
 
     
     const val=await ask({description:`You are a helpful checker bot. You are provided two phrases, the left phrase is the users answer, and the right phrase is the correct solution. Return "Please Type an Anwser" if the anwser is blank. Return if the user answer is either "Excellent" (if there are just a few mistakes), "Incorrect"(if the general definition of the user anwser totally does not match the solution), or "Close enough" (which means the input is a synynom or has a definition similar to that of the solution). PLEASE MAKE SURE TO JUDGE THE ANSWSER WITH CONTEXT FROM THE QUESTION THEY ARE ANSWERING.`,query:`User anwser: ${i} and the correct anwser: ${ans}, the Question ${ques}`})
