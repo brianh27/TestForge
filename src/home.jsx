@@ -20,7 +20,7 @@ const Home = () => {
         const myParam = urlParams.get('signedIn');
         if (myParam !== null) {
 
-          if (myParam === '0') { // Compare with string "0"
+          if (myParam === '0') { 
             setMessage('Please Sign In \n Before Using Services');
           } else {
             setMessage('Invalid Link');
@@ -44,7 +44,7 @@ const Home = () => {
     getCount();
   }, []);
 
-  // Intersection Observer to detect when the section is in view
+  
   useEffect(() => {
     const displayElement = userCountDisplayRef.current;
     let count = 0;
@@ -59,23 +59,23 @@ const Home = () => {
             } else {
               clearInterval(interval);
             }
-          }, 85); // Adjust speed here
-          observer.unobserve(entry.target);  // Stop observing after counting starts
+          }, 85);
+          observer.unobserve(entry.target);  
         }
       });
     }, {
-      root: null, // Uses the viewport as the default root
-      threshold: 0.1 // Trigger when 10% of the section is visible
+      root: null,
+      threshold: 0.1
     });
 
     const targetSection = document.getElementById('userCountSection');
     if (targetSection) {
-      observer.observe(targetSection);  // Start observing the section
+      observer.observe(targetSection);  
     }
 
     return () => {
       if (targetSection) {
-        observer.unobserve(targetSection); // Cleanup observer on unmount
+        observer.unobserve(targetSection); 
       }
     };
   }, [userCount]);
