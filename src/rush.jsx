@@ -6,7 +6,7 @@ import { useSearchParams,useNavigate, Link} from 'react-router-dom';
 import userCheck,{getData,logout,getState} from './backend'
 import Bar from './bar.jsx'
 function Rush() {
-  // Access the mode parameter from the URL
+
   const [uData,setU]=useState(null)
   const navigate = useNavigate();
   useEffect(() => {
